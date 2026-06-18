@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "WebFetch(domain:developers.meta.com)",
-      "PowerShell(Get-ChildItem \"c:\\\\Users\\\\rayga\\\\Desktop\\\\ThoughtBubble\\\\Library\\\\PackageCache\\\\com.meta.xr.sdk.interaction@90e9cc9754fc\\\\Runtime\\\\Scripts\" -Recurse -Filter \"HandGrabInteractable.cs\" | ForEach-Object { Get-Content $_.FullName -TotalCount 35 })",
-      "PowerShell(Get-ChildItem \"c:\\\\Users\\\\rayga\\\\Desktop\\\\ThoughtBubble\\\\Library\\\\PackageCache\\\\com.meta.xr.sdk.interaction@90e9cc9754fc\\\\Runtime\\\\Scripts\" -Recurse -Filter \"Grabbable.cs\" | ForEach-Object { Get-Content $_.FullName -TotalCount 80 })"
-    ]
-  }
-}
