@@ -209,7 +209,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Meta.XR.BuildingBlocks::Meta.XR.BuildingBlocks.BuildingBlock
   blockId: f8766c17-aaf8-4b55-9431-de8deea83842
-  instanceId: a70552e6-3951-4bdd-b33f-b66747e6e51b
+  instanceId: 926b9c32-3db7-404b-9246-1e1a1ba5e64d
   version: 1
   installationRoutineCheckpoint:
     _installationRoutineId: f8338144-8280-4ff6-9455-ae2bb9c20fe8
@@ -294,6 +294,8 @@ GameObject:
   - component: {fileID: 5399276373619904199}
   - component: {fileID: 1214817113205091945}
   - component: {fileID: 737932662826455011}
+  - component: {fileID: 5719607566519503161}
+  - component: {fileID: 7391807390241137369}
   m_Layer: 0
   m_Name: Thought Bubble Interactable
   m_TagString: Untagged
@@ -331,7 +333,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Meta.XR.BuildingBlocks::Meta.XR.BuildingBlocks.BuildingBlock
   blockId: 7358e191-33b7-43ca-b066-b2f00531ac66
-  instanceId: 22161698-baa2-464c-b9dc-c2585b5170a5
+  instanceId: 10ff09c1-eaa2-4ee2-8168-278c9f3e1898
   version: 1
   installationRoutineCheckpoint:
     _installationRoutineId: 
@@ -476,4 +478,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25d91fdbb7cefbd44bec5baa6776efee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThoughtBubble.BubbleColor
-  _color: {r: 1, g: 1, b: 1, a: 1}
+  _color: {r: 1, g: 0, b: 0, a: 1}
+--- !u!114 &5719607566519503161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8113090910208356346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2f8f6e9e6f3e114b9bf9a57c2160615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Oculus.Interaction::Oculus.Interaction.PointableUnityEventWrapper
+  _pointable: {fileID: 1214817113205091945}
+  _whenRelease:
+    m_PersistentCalls:
+      m_Calls: []
+  _whenHover:
+    m_PersistentCalls:
+      m_Calls: []
+  _whenUnhover:
+    m_PersistentCalls:
+      m_Calls: []
+  _whenSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  _whenUnselect:
+    m_PersistentCalls:
+      m_Calls: []
+  _whenMove:
+    m_PersistentCalls:
+      m_Calls: []
+  _whenCancel:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &7391807390241137369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8113090910208356346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ea32aaadb2602249b38694ca4325b4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleGrabBehavior
+  scenePropReference: {fileID: 0}
