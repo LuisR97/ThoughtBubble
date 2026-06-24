@@ -22,6 +22,7 @@ namespace ThoughtBubble
             // deferred enable/disable registration handshake) has completed.
             yield return null;
             gameObject.SetActive(false);
+            Debug.Log("Pre-initialized hidden object.");
         }
     }
 }
