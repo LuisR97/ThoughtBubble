@@ -1,3 +1,4 @@
+using Oculus.Interaction;
 using UnityEngine;
 
 public class ScenePropReference : MonoBehaviour
@@ -7,6 +8,9 @@ public class ScenePropReference : MonoBehaviour
     //This is a singleton, so only one instance should exist at a time
     public static ScenePropReference Instance {get; private set;}
     public GameObject bubbleMenu;
+    public GameObject mainMenu;
+    public PointableUnityEventWrapper leftWristButton;
+    public PointableUnityEventWrapper rightWristButton;
 
     void Awake()
     {
