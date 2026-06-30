@@ -59,6 +59,7 @@ namespace ThoughtBubble
             }
             forward.Normalize();
 
+            //starts at the head, then walk _distance in the forward direction.
             Vector3 position = head.position + forward * _distance;
             position.y += _verticalOffset;
             transform.position = position;

@@ -9,6 +9,7 @@ public class BubbleInstantiator : MonoBehaviour
     [Tooltip("Where new bubbles appear. Leave empty to spawn at this object's position.")]
     [SerializeField] private Transform _spawnPoint;
     public PointableUnityEventWrapper buttonEventWrapper;
+    public SavedBubbleData bubbleData;
 
     void Awake()
     {
@@ -19,6 +20,11 @@ public class BubbleInstantiator : MonoBehaviour
             return;
         }
         buttonEventWrapper.WhenSelect.AddListener(ButtonPress);
+    }
+
+    void Start()
+    {
+        bubbleData = ScenePropReference.Instance.savedBubbles;
     }
 
     public void ButtonPress(PointerEvent evt)
@@ -40,6 +46,16 @@ public class BubbleInstantiator : MonoBehaviour
         }
 
         Transform origin = _spawnPoint != null ? _spawnPoint : transform;
-        return Instantiate(_bubblePrefab, origin.position, origin.rotation);
+        //add bubble data to the bubbles list in SavedBubbleData
+        bubbleData.AddBubble(
+            new Vector3(origin.position.x, origin.position.y, origin.position.z),
+            new Color(1, 1, 1, 1),
+            "",
+            false
+        );
+        GameObject bubbleObject = Instantiate(_bubblePrefab, origin.position, origin.rotation);
+        //add the new bubble object to the bubbleObjects list in SavedBubbleData
+        bubbleData.bubbleObjects.Add(bubbleObject);
+        return bubbleObject;
     }
 }

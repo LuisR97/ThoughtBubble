@@ -9,8 +9,11 @@ public class ScenePropReference : MonoBehaviour
     public static ScenePropReference Instance {get; private set;}
     public GameObject bubbleMenu;
     public GameObject mainMenu;
+    public GameObject bubbleInstantiatorMenu;
     public PointableUnityEventWrapper leftWristButton;
     public PointableUnityEventWrapper rightWristButton;
+    public SavedBubbleData savedBubbles;
+    public GameObject bubblePrefab;
 
     void Awake()
     {
