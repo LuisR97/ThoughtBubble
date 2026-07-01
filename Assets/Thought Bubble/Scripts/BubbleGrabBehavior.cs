@@ -44,6 +44,11 @@ public class BubbleGrabBehavior : MonoBehaviour
             grabRoutine = null;
         }
         StartCoroutine(ReleaseBubble());
+
+        // If this was a throw, hand off to the orbit motion (it ignores gentle releases).
+        BubbleOrbitMotion orbit = GetComponent<BubbleOrbitMotion>();
+        if (orbit != null)
+            orbit.OnReleased();
     }
 
 

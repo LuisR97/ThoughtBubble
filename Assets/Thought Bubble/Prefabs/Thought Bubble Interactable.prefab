@@ -209,7 +209,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Meta.XR.BuildingBlocks::Meta.XR.BuildingBlocks.BuildingBlock
   blockId: f8766c17-aaf8-4b55-9431-de8deea83842
-  instanceId: 18b5e6a6-bdef-4574-96df-0532eb8bd385
+  instanceId: 61b5e9fb-a7fc-4082-9a35-76247885af64
   version: 1
   installationRoutineCheckpoint:
     _installationRoutineId: f8338144-8280-4ff6-9455-ae2bb9c20fe8
@@ -293,10 +293,11 @@ GameObject:
   - component: {fileID: 8869797667664766494}
   - component: {fileID: 5399276373619904199}
   - component: {fileID: 1214817113205091945}
-  - component: {fileID: 737932662826455011}
   - component: {fileID: 5719607566519503161}
+  - component: {fileID: 737932662826455011}
   - component: {fileID: 7391807390241137369}
   - component: {fileID: 7289940615040942284}
+  - component: {fileID: 7391807390241137370}
   m_Layer: 0
   m_Name: Thought Bubble Interactable
   m_TagString: Untagged
@@ -334,7 +335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Meta.XR.BuildingBlocks::Meta.XR.BuildingBlocks.BuildingBlock
   blockId: 7358e191-33b7-43ca-b066-b2f00531ac66
-  instanceId: ace2df41-3b92-48ee-ae39-255c5b905eb7
+  instanceId: edc59cb1-0ae3-4b25-a97f-34a98279a8a0
   version: 1
   installationRoutineCheckpoint:
     _installationRoutineId: 
@@ -406,12 +407,12 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -467,19 +468,6 @@ MonoBehaviour:
   _kinematicWhileSelected: 1
   _throwWhenUnselected: 1
   _forceKinematicDisabled: 0
---- !u!114 &737932662826455011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8113090910208356346}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25d91fdbb7cefbd44bec5baa6776efee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ThoughtBubble.BubbleColor
-  _color: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &5719607566519503161
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -514,6 +502,19 @@ MonoBehaviour:
   _whenCancel:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &737932662826455011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8113090910208356346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25d91fdbb7cefbd44bec5baa6776efee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThoughtBubble.BubbleColor
+  _color: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &7391807390241137369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -540,8 +541,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d64c56d2160325645aa0932de8aed690, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bubble
-  startingPosition: {x: 0, y: 0, z: 0}
-  lastPosition: {x: 0, y: 0, z: 0}
-  bubbleColor: {r: 0, g: 0, b: 0, a: 0}
-  transcription: 
-  isMovingClockwise: 0
+  data:
+    currentX: 0
+    currentY: 0
+    currentZ: 0
+    r: 0
+    g: 0
+    b: 0
+    a: 0
+    transcription: 
+    isMovingClockwise: 0
+    isOrbiting: 0
+--- !u!114 &7391807390241137370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8113090910208356346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1e2d3c4b5a6978869504132231415a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  domeCenter: {fileID: 0}
+  domeRadius: 2
+  minRingRadius: 0.4
+  orbitSpeed: 0.75
+  randomizeDirection: 1
+  clockwise: 0
+  throwSpeedThreshold: 0.5
+  curveStartDistance: 1.5
+  settleSharpness: 2
+  radialGain: 1
+  verticalGain: 3

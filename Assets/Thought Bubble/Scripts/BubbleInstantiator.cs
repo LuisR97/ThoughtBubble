@@ -46,16 +46,10 @@ public class BubbleInstantiator : MonoBehaviour
         }
 
         Transform origin = _spawnPoint != null ? _spawnPoint : transform;
-        //add bubble data to the bubbles list in SavedBubbleData
-        bubbleData.AddBubble(
-            new Vector3(origin.position.x, origin.position.y, origin.position.z),
-            new Color(1, 1, 1, 1),
-            "",
-            false
-        );
         GameObject bubbleObject = Instantiate(_bubblePrefab, origin.position, origin.rotation);
-        //add the new bubble object to the bubbleObjects list in SavedBubbleData
-        bubbleData.bubbleObjects.Add(bubbleObject);
+        // Track the live bubble so it's included in saves. It keeps the prefab's
+        // default color; its state is snapshotted from the live components at save time.
+        bubbleData.Register(bubbleObject.GetComponent<Bubble>());
         return bubbleObject;
     }
 }

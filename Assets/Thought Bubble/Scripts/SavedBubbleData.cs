@@ -2,94 +2,78 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.Scripting;
 
 public class SavedBubbleData : MonoBehaviour
 {
-    [Tooltip("Bubbles loaded from / about to be saved to disk.")]
+    [Tooltip("Live bubbles in the scene — the single source of truth at runtime.")]
     public List<Bubble> bubbles = new List<Bubble>();
-    public List<GameObject> bubbleObjects = new List<GameObject>();
+
     // persistentDataPath is the one writable, persistent location on both PC and Quest.
     private string SavePath => Path.Combine(Application.persistentDataPath, "bubbles.json");
 
     void Start()
     {
-        Load();
-        SpawnBubblePrefabsFromList();
+        LoadAndSpawn();
     }
 
-    /// <summary>Reads the saved JSON into the list. Called automatically at startup. Loads Bubble data but not the actual GameObjects.</summary>
-    public void Load()
+    /// <summary>Reads the saved JSON and spawns a live bubble for each entry.</summary>
+    public void LoadAndSpawn()
+    {
+        foreach (Bubble.Data d in Load())
+        {
+            GameObject obj = Instantiate(ScenePropReference.Instance.bubblePrefab, d.Position, Quaternion.identity);
+            Bubble bubble = obj.GetComponent<Bubble>();
+            if (bubble == null)
+            {
+                Debug.LogError("Bubble prefab is missing its Bubble component.", obj);
+                continue;
+            }
+            bubble.ApplyData(d);     // sets color + resumes orbit if it was orbiting
+            bubbles.Add(bubble);
+        }
+        Debug.Log($"Spawned {bubbles.Count} bubbles.");
+    }
+
+    /// <summary>Reads the saved JSON into a list of plain data snapshots.</summary>
+    private List<Bubble.Data> Load()
     {
         if (!File.Exists(SavePath))
         {
-            bubbles = new List<Bubble>(); 
             Debug.Log("No saved bubble data found; starting with an empty list.");
-            return;
+            return new List<Bubble.Data>();
         }
 
         string json = File.ReadAllText(SavePath);
-        bubbles = JsonConvert.DeserializeObject<List<Bubble>>(json) ?? new List<Bubble>();
-        Debug.Log($"Loaded {bubbles.Count} bubbles from {SavePath}");
-    }
-    
-    /// <summary>Spawns GameObjects for each Bubble in the list.</summary>
-    public void SpawnBubblePrefabsFromList()
-    {
-        foreach (Bubble bubble in bubbles)
-        {
-            bubbleObjects.Add(Instantiate(ScenePropReference.Instance.bubblePrefab, new Vector3((float)bubble.currentX, (float)bubble.currentY, (float)bubble.currentZ), Quaternion.identity));
-        }
+        List<Bubble.Data> loaded = JsonConvert.DeserializeObject<List<Bubble.Data>>(json);
+        Debug.Log($"Loaded {(loaded?.Count ?? 0)} bubbles from {SavePath}");
+        return loaded ?? new List<Bubble.Data>();
     }
 
-    /// <summary>Writes the current list to disk as JSON.</summary>
+    /// <summary>Snapshots every live bubble and writes the list to disk as JSON.</summary>
     public void SaveToFile()
     {
-        // Update the list of bubbles with the current state of the bubble objects
-        bubbles = SaveCurrentList();
-        string json = JsonConvert.SerializeObject(bubbles, Formatting.Indented);
+        List<Bubble.Data> snapshot = new List<Bubble.Data>(bubbles.Count);
+        foreach (Bubble b in bubbles)
+            if (b != null)
+                snapshot.Add(b.CaptureSnapshot());
+
+        string json = JsonConvert.SerializeObject(snapshot, Formatting.Indented);
         File.WriteAllText(SavePath, json);
-        Debug.Log($"Saved {bubbles.Count} bubbles to {SavePath}");
+        Debug.Log($"Saved {snapshot.Count} bubbles to {SavePath}");
     }
 
-    public List<Bubble> SaveCurrentList()
+    /// <summary>Track a newly created bubble so it's included in saves.</summary>
+    public void Register(Bubble bubble)
     {
-        List<Bubble> currentBubbles = new List<Bubble>(bubbles);
-        for(int i = 0; i < bubbleObjects.Count; i++)
-        {
-            currentBubbles[i] = new Bubble(
-                bubbleObjects[i].transform.position.x,
-                bubbleObjects[i].transform.position.y,
-                bubbleObjects[i].transform.position.z,
-                bubbles[i].r,
-                bubbles[i].g,
-                bubbles[i].b,
-                bubbles[i].a,
-                bubbles[i].transcription,
-                bubbles[i].isMovingClockwise
-            );
-        }
-        return currentBubbles;
+        if (bubble != null && !bubbles.Contains(bubble))
+            bubbles.Add(bubble);
     }
 
-    /// <summary>Adds a bubble to the in-memory list (call Save() to persist it).</summary>
-    public void AddBubble(Vector3 position, Color color, string transcription, bool isMovingClockwise) 
+    /// <summary>Stop tracking a bubble (call before destroying it).</summary>
+    public void Remove(Bubble bubble)
     {
-        //TO DO: Add real transcription and audio recordings
-        bubbles.Add(new Bubble(
-            position.x, position.y, position.z,
-            (int)(color.r * 255), (int)(color.g * 255), (int)(color.b * 255), (int)(color.a * 255),
-            "",
-            false
-        ));
+        bubbles.Remove(bubble);
     }
-
-    //TO-DO
-    public void RemoveBubble(Bubble bubble)
-    {
-
-    }
-
 
     /// <summary>
     /// The reliable "session ended" signal on Quest/Android: the OS suspends the
@@ -107,5 +91,4 @@ public class SavedBubbleData : MonoBehaviour
     {
         SaveToFile();
     }
-
 }
