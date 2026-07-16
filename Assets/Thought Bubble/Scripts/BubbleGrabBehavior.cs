@@ -30,7 +30,16 @@ public class BubbleGrabBehavior : MonoBehaviour
     // Called when the bubble is grabbed. Add any further grab-time logic here.
     private void OnSelect(PointerEvent evt)
     {
-        grabRoutine = StartCoroutine(GrabBubble());
+        grabRoutine = StartCoroutine(GrabBubble()); //opens menu
+        if(scenePropReference.currentBubbleBeingGrabbed == null) 
+        {
+            scenePropReference.currentBubbleBeingGrabbed = GetComponent<Bubble>(); // Set the reference to the currently grabbed bubble
+        }
+        else
+        {
+            Debug.LogWarning("A bubble is already being grabbed. Ignore this grab");
+            //TODO add logic that prohibits the other hand from being able to grab another bubble if one is already being grabbed.
+        }
     }
 
     // Called when the bubble is released. Add any further release-time logic here.
@@ -43,12 +52,17 @@ public class BubbleGrabBehavior : MonoBehaviour
             StopCoroutine(grabRoutine);
             grabRoutine = null;
         }
-        StartCoroutine(ReleaseBubble());
+        scenePropReference.currentBubbleBeingGrabbed = null; // Clear the reference to the currently grabbed bubble
+        scenePropReference.audioSource.Stop(); // Stop the audio playback when the bubble is released
+        scenePropReference.audioSource.clip = null; // Clear the audio clip to prevent it from
+        StartCoroutine(ReleaseBubble()); //closes menu
 
         // If this was a throw, hand off to the orbit motion (it ignores gentle releases).
         BubbleOrbitMotion orbit = GetComponent<BubbleOrbitMotion>();
         if (orbit != null)
+        {
             orbit.OnReleased();
+        }
     }
 
 

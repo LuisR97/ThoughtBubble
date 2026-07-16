@@ -18,7 +18,7 @@ public class Bubble : MonoBehaviour
         public string transcription;
         public bool isMovingClockwise;
         public bool isOrbiting;
-
+        public string audioFilePath;      // relative to Application.persistentDataPath
         public Data() { }                 // required for JSON deserialization
 
         // Convenience accessors for code only. [JsonIgnore] keeps Newtonsoft from
@@ -29,7 +29,7 @@ public class Bubble : MonoBehaviour
     }
 
     [SerializeField] private Data data = new Data();
-    public Data BubbleData => data;
+    public Data BubbleData => data; //THIS IS THE STRUCTURE THAT HOLDS THE BUBBLE'S DATA AND IS WHAT YOU CAN ACCESS THROUGH CODE
 
     private BubbleColor _color;
     private BubbleOrbitMotion _orbit;
@@ -62,12 +62,12 @@ public class Bubble : MonoBehaviour
     }
 
     /// <summary>Pushes loaded data onto this live bubble (call right after Instantiate).</summary>
-    public void ApplyData(Data loaded)
+    public void ApplyData(Data incomingData)
     {
-        data = loaded;
-        transform.position = loaded.Position;
-        if (_color != null) _color.Color = loaded.Color;
-        if (loaded.isOrbiting && _orbit != null)
-            _orbit.ResumeOrbit(loaded.isMovingClockwise);
+        data = incomingData;
+        transform.position = incomingData.Position;
+        if (_color != null) _color.Color = incomingData.Color;
+        if (incomingData.isOrbiting && _orbit != null)
+            _orbit.ResumeOrbit(incomingData.isMovingClockwise);
     }
 }

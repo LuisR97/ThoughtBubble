@@ -11,6 +11,7 @@ public class BubbleInstantiator : MonoBehaviour
     [SerializeField] private Transform _spawnPoint;
     private PointableUnityEventWrapper buttonEventWrapper;
     private SavedBubbleData bubbleData;
+    private MicrophoneRecorder microphoneRecorder;
     
     void Awake()
     {
@@ -26,8 +27,10 @@ public class BubbleInstantiator : MonoBehaviour
     void Start()
     {
         bubbleData = ScenePropReference.Instance.savedBubbles;
+        microphoneRecorder = ScenePropReference.Instance.microphoneRecorder;
     }
 
+    //Gets called from CONFIRM BUBBLE button in the Create Bubble menu 
     public void ButtonPress(PointerEvent evt)
     {
         Debug.Log("Button pressed.");
@@ -47,9 +50,11 @@ public class BubbleInstantiator : MonoBehaviour
         }
 
         Transform origin = _spawnPoint != null ? _spawnPoint : transform;
-        Destroy(currentDummyBubble); // destroy the dummy bubble if it exists
-        currentDummyBubble = null; // clear any dummy bubble reference when spawning a real one
+        Destroy(currentDummyBubble);
+        currentDummyBubble = null; 
+
         GameObject bubbleObject = Instantiate(_bubblePrefab, origin.position, origin.rotation);
+        bubbleObject.GetComponent<Bubble>().BubbleData.audioFilePath = microphoneRecorder.SaveLastRecordingToFile();
         // Track the live bubble so it's included in saves. It keeps the prefab's
         // default color; its state is snapshotted from the live components at save time.
         bubbleData.Register(bubbleObject.GetComponent<Bubble>());

@@ -15,6 +15,9 @@ public class ScenePropReference : MonoBehaviour
     public SavedBubbleData savedBubbles;
     public GameObject bubblePrefab;
     public AudioSource audioSource;
+    public MicrophoneRecorder microphoneRecorder;
+    public Bubble currentBubbleBeingGrabbed;
+    public BubbleMenu bubbleMenuScript;
 
     [Tooltip("Optional: the user's head (e.g. CenterEyeAnchor). If unset, uses Camera.main.")]
     public Transform headForOrbitCenter;
