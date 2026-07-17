@@ -1,16 +1,19 @@
 using Oculus.Interaction;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Events;
 
 public class BubbleMenu : MonoBehaviour
 {
-    public ScenePropReference scenePropReference;
+    private ScenePropReference scenePropReference; //TODO make sure this reference still works after being made private
     public PointableUnityEventWrapper playAudioButton, pauseAudioButton, rewindAudioButton;
     private PokeInteractableToggle playAudioButtonToggle, pauseAudioButtonToggle, rewindAudioButtonToggle;
     //TODO add reference to the delete button and text scroll with audio transcription
     public TMP_Text audioLengthText, timeCounterText;
-    private bool isAudioPlaying;
+    private bool isAudioPlaying; 
     private float elapsedTime;
+    private bool isAudioFinishedPlaying = false;
+    public UnityEvent onAudioFinishedPlaying;
 
     void Awake()
     {
@@ -49,20 +52,22 @@ public class BubbleMenu : MonoBehaviour
         if (isAudioPlaying)
         {
             isAudioPlaying = scenePropReference.audioSource.isPlaying;
+            
             elapsedTime += Time.deltaTime;
             int minutes = Mathf.FloorToInt(elapsedTime / 60f);
             int seconds = Mathf.FloorToInt(elapsedTime % 60f);
             timeCounterText.text = string.Format("{0}:{1:00}", minutes, seconds);
-            if (scenePropReference.audioSource.clip != null)
+
+            float clipLength = scenePropReference.audioSource.clip.length;
+            int clipMinutes = Mathf.FloorToInt(clipLength / 60f);
+            int clipSeconds = Mathf.FloorToInt(clipLength % 60f);
+            audioLengthText.text = string.Format("{0}:{1:00}", clipMinutes, clipSeconds);
+            
+            if(!isAudioFinishedPlaying && !isAudioPlaying && WithinThreshold(elapsedTime, scenePropReference.audioSource.clip.length, 0.5f))
             {
-                float clipLength = scenePropReference.audioSource.clip.length;
-                int clipMinutes = Mathf.FloorToInt(clipLength / 60f);
-                int clipSeconds = Mathf.FloorToInt(clipLength % 60f);
-                audioLengthText.text = string.Format("{0}:{1:00}", clipMinutes, clipSeconds);
-            }
-            else
-            {
-                audioLengthText.text = "0:00";
+                isAudioFinishedPlaying = true;
+                onAudioFinishedPlaying?.Invoke();
+                elapsedTime = 0f;
             }
         }
     }
@@ -107,6 +112,7 @@ public class BubbleMenu : MonoBehaviour
         // Nothing loaded (fresh grab) → load this bubble's recording and play from the start.
         scenePropReference.microphoneRecorder.PlayRecording(audioFilePath);
         isAudioPlaying = true;
+        isAudioFinishedPlaying = false;
     }
 
     public void PauseAudio(PointerEvent evt)
@@ -122,6 +128,12 @@ public class BubbleMenu : MonoBehaviour
         timeCounterText.text = "0:00";
         PauseAudio(evt);
         isAudioPlaying = false;
+        isAudioFinishedPlaying = false;
+    }
+
+    private bool WithinThreshold(float a, float b, float threshold)
+    {
+        return Mathf.Abs(a - b) < threshold;
     }
 
     //TODO add a method for resetting all the buttons

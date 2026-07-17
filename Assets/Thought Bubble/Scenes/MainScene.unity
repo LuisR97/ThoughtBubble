@@ -1591,6 +1591,47 @@ MonoBehaviour:
   rewindAudioButton: {fileID: 563821086}
   audioLengthText: {fileID: 1693566172}
   timeCounterText: {fileID: 722764186}
+  isAudioPlaying: 0
+  isAudioFinishedPlaying: 0
+  onAudioFinishedPlaying:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 563821085}
+        m_TargetAssemblyTypeName: PokeInteractableToggle, Assembly-CSharp
+        m_MethodName: Disable
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2032648300}
+        m_TargetAssemblyTypeName: PokeInteractableToggle, Assembly-CSharp
+        m_MethodName: Disable
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 284580120}
+        m_TargetAssemblyTypeName: PokeInteractableToggle, Assembly-CSharp
+        m_MethodName: Enable
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &132468572
 GameObject:
   m_ObjectHideFlags: 0
