@@ -1585,14 +1585,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b48334aad6f17ac4095ae8524c5c4b0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BubbleMenu
-  scenePropReference: {fileID: 0}
   playAudioButton: {fileID: 284580122}
   pauseAudioButton: {fileID: 2032648301}
   rewindAudioButton: {fileID: 563821086}
   audioLengthText: {fileID: 1693566172}
   timeCounterText: {fileID: 722764186}
-  isAudioPlaying: 0
-  isAudioFinishedPlaying: 0
   onAudioFinishedPlaying:
     m_PersistentCalls:
       m_Calls:
@@ -5535,6 +5532,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1185488026}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &512853790
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 512853791}
+  m_Layer: 0
+  m_Name: Dictation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &512853791
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 512853790}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.75248, y: -0, z: 12.97222}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &536836104
 GameObject:
@@ -15664,6 +15692,7 @@ MonoBehaviour:
   bubblePrefab: {fileID: 8113090910208356346, guid: 18acf2cd75360ee49b650ce3cb6b0f2f, type: 3}
   audioSource: {fileID: 65870881}
   microphoneRecorder: {fileID: 65870880}
+  bubbleTranscriber: {fileID: 0}
   currentBubbleBeingGrabbed: {fileID: 0}
   bubbleMenuScript: {fileID: 0}
   headForOrbitCenter: {fileID: 0}
@@ -16003,3 +16032,4 @@ SceneRoots:
   - {fileID: 463199201}
   - {fileID: 1412883310}
   - {fileID: 65870882}
+  - {fileID: 512853791}
