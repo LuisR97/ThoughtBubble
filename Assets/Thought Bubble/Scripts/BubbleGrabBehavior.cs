@@ -1,5 +1,6 @@
 using System.Collections;
 using Oculus.Interaction;
+using Oculus.Interaction.HandGrab;
 using UnityEngine;
 
 public class BubbleGrabBehavior : MonoBehaviour
@@ -10,6 +11,7 @@ public class BubbleGrabBehavior : MonoBehaviour
     [Tooltip("How long the bubble must be held before the menu appears (seconds).")]
     [SerializeField] private float grabDelay = 0.5f;
     private Coroutine grabRoutine;
+    public GameObject handGrabObject, distanceGrabObject;
 
     void Awake()
     {
@@ -38,8 +40,8 @@ public class BubbleGrabBehavior : MonoBehaviour
         else
         {
             Debug.LogWarning("A bubble is already being grabbed. Ignore this grab");
-            //TODO add logic that prohibits the other hand from being able to grab another bubble if one is already being grabbed.
         }
+        DisableOtherBubbles(false);
     }
 
     // Called when the bubble is released. Add any further release-time logic here.
@@ -63,6 +65,7 @@ public class BubbleGrabBehavior : MonoBehaviour
         {
             orbit.OnReleased();
         }
+        DisableOtherBubbles(true);
     }
 
 
@@ -97,5 +100,20 @@ public class BubbleGrabBehavior : MonoBehaviour
         }
 
         yield break;
+    }
+
+    private void DisableOtherBubbles(bool state)
+    {
+        foreach(Bubble bubble in scenePropReference.savedBubbles.bubbles)
+        {
+            if(bubble != scenePropReference.currentBubbleBeingGrabbed)
+            {
+                BubbleGrabBehavior grabBehavior = bubble.GetComponent<BubbleGrabBehavior>();
+                grabBehavior.handGrabObject.GetComponent<HandGrabInteractable>().enabled = state;
+                grabBehavior.handGrabObject.GetComponent<GrabInteractable>().enabled = state;
+                grabBehavior.distanceGrabObject.GetComponent<DistanceHandGrabInteractable>().enabled = state;
+                grabBehavior.distanceGrabObject.GetComponent<DistanceGrabInteractable>().enabled = state;
+            }
+        }
     }
 }

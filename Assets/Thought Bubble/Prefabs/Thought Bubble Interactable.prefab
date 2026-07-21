@@ -209,7 +209,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Meta.XR.BuildingBlocks::Meta.XR.BuildingBlocks.BuildingBlock
   blockId: f8766c17-aaf8-4b55-9431-de8deea83842
-  instanceId: 61b5e9fb-a7fc-4082-9a35-76247885af64
+  instanceId: c4d60d2e-b2a8-4d3e-be9c-9cde0669c77d
   version: 1
   installationRoutineCheckpoint:
     _installationRoutineId: f8338144-8280-4ff6-9455-ae2bb9c20fe8
@@ -335,7 +335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Meta.XR.BuildingBlocks::Meta.XR.BuildingBlocks.BuildingBlock
   blockId: 7358e191-33b7-43ca-b066-b2f00531ac66
-  instanceId: edc59cb1-0ae3-4b25-a97f-34a98279a8a0
+  instanceId: ad9210a9-7cc6-413a-9f21-b544ef17c9c8
   version: 1
   installationRoutineCheckpoint:
     _installationRoutineId: 
@@ -529,6 +529,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BubbleGrabBehavior
   scenePropReference: {fileID: 0}
   grabDelay: 0.5
+  handGrabObject: {fileID: 6438453402057598619}
+  distanceGrabObject: {fileID: 2330299064914721382}
 --- !u!114 &7289940615040942284
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -552,6 +554,7 @@ MonoBehaviour:
     transcription: 
     isMovingClockwise: 0
     isOrbiting: 0
+    audioFilePath: 
 --- !u!114 &7391807390241137370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -567,7 +570,7 @@ MonoBehaviour:
   domeCenter: {fileID: 0}
   domeRadius: 2
   minRingRadius: 0.4
-  orbitSpeed: 0.75
+  orbitSpeed: 0.6
   randomizeDirection: 1
   clockwise: 0
   throwSpeedThreshold: 0.5
