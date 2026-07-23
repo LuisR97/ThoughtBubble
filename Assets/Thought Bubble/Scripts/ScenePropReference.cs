@@ -16,7 +16,6 @@ public class ScenePropReference : MonoBehaviour
     public GameObject bubblePrefab;
     public AudioSource audioSource;
     public MicrophoneRecorder microphoneRecorder;
-    public BubbleTranscriber bubbleTranscriber;
     public Bubble currentBubbleBeingGrabbed;
     public BubbleMenu bubbleMenuScript;
 

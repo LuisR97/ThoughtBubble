@@ -8,11 +8,11 @@ PlayerSettings:
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
-  defaultScreenOrientation: 4
+  defaultScreenOrientation: 3
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
+  companyName: CuervoWorks
   productName: ThoughtBubble
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -146,10 +146,9 @@ PlayerSettings:
   tvOSBundleVersion: 1.0
   bundleVersion: 1.0
   preloadedAssets:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: d6b2d2a9564c9f3429d6527e222445a3, type: 2}
+  - {fileID: -348627342837204857, guid: 3dd11dcd12272e54f8a19d8224e35f53, type: 2}
   - {fileID: 9030113687040111788, guid: 4b3de149e50ea0c4f8ad04c79b9f12ec, type: 2}
-  - {fileID: 4226981303226134123, guid: b716680a41c7a094fa3b7fb9a8024a67, type: 2}
-  - {fileID: 11400000, guid: 908d62378b8205449861e5838a18a596, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -171,7 +170,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.4
   androidMinAspectRatio: 1
   applicationIdentifier:
-    Android: com.DefaultCompany.VRTemplate
+    Android: com.cuervoworks.thoughtbubble
     Standalone: com.Default-Company.VR-Template
     VisionOS: com.Default-Company.VR-Template
     iPhone: com.Default-Company.VR-Template
@@ -935,7 +934,7 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: ThoughtBubble
-  metroPackageVersion: 
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -943,7 +942,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: ThoughtBubble
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: ThoughtBubble
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0

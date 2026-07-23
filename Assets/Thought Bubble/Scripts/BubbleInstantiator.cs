@@ -12,7 +12,6 @@ public class BubbleInstantiator : MonoBehaviour
     private PointableUnityEventWrapper buttonEventWrapper;
     private SavedBubbleData bubbleData;
     private MicrophoneRecorder microphoneRecorder;
-    private BubbleTranscriber bubbleTranscriber;
     
     void Awake()
     {
@@ -29,7 +28,6 @@ public class BubbleInstantiator : MonoBehaviour
     {
         bubbleData = ScenePropReference.Instance.savedBubbles;
         microphoneRecorder = ScenePropReference.Instance.microphoneRecorder;
-        bubbleTranscriber = ScenePropReference.Instance.bubbleTranscriber;
     }
 
     //Gets called from CONFIRM BUBBLE button in the Create Bubble menu 
@@ -58,11 +56,9 @@ public class BubbleInstantiator : MonoBehaviour
         GameObject bubbleObject = Instantiate(_bubblePrefab, origin.position, origin.rotation);
         Bubble bubble = bubbleObject.GetComponent<Bubble>();
         bubble.BubbleData.audioFilePath = microphoneRecorder.SaveLastRecordingToFile();
-        // The dictation result settled while the user was confirming, so it's ready to store.
-        if (bubbleTranscriber != null) bubbleTranscriber.ApplyTo(bubble);
         // Track the live bubble so it's included in saves. It keeps the prefab's
         // default color; its state is snapshotted from the live components at save time.
-        bubbleData.Register(bubbleObject.GetComponent<Bubble>());
+        bubbleData.Register(bubble);
         return bubbleObject;
     }
 
