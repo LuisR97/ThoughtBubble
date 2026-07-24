@@ -128,6 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 28740228}
+  - component: {fileID: 28740229}
   m_Layer: 5
   m_Name: Main Screen
   m_TagString: Untagged
@@ -158,6 +159,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &28740229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 28740227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4209b246d13debc44a9ec97d29457635, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MainMenu
+  mainScreen: {fileID: 28740227}
+  bubbleCreationMenu: {fileID: 630386828}
+  openBubbleCreationMenuButton: {fileID: 887596210}
 --- !u!1 &35266424
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,6 +391,7 @@ MonoBehaviour:
   buttonEventWrapper: {fileID: 0}
   isMainMenuVisible: 0
   mainMenu: {fileID: 0}
+  bubbleCreationMenu: {fileID: 0}
 --- !u!114 &35266429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1035,6 +1052,7 @@ MonoBehaviour:
   buttonEventWrapper: {fileID: 0}
   isMainMenuVisible: 0
   mainMenu: {fileID: 0}
+  bubbleCreationMenu: {fileID: 0}
 --- !u!114 &56284187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7222,18 +7240,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1604643721}
-        m_TargetAssemblyTypeName: PokeInteractableToggle, Assembly-CSharp
-        m_MethodName: Enable
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1586917554}
         m_TargetAssemblyTypeName: PokeInteractableToggle, Assembly-CSharp
         m_MethodName: Enable
@@ -7400,8 +7406,9 @@ GameObject:
   - component: {fileID: 887596207}
   - component: {fileID: 887596205}
   - component: {fileID: 887596209}
+  - component: {fileID: 887596210}
   m_Layer: 0
-  m_Name: '[BuildingBlock]CREATE NEW BUBBLE poke interactable'
+  m_Name: '[BuildingBlock]OPEN BUBBLE CREATION MENU poke interactable'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7603,15 +7610,6 @@ MonoBehaviour:
   _pointable: {fileID: 887596205}
   _whenRelease:
     m_PersistentCalls:
-      m_Calls: []
-  _whenHover:
-    m_PersistentCalls:
-      m_Calls: []
-  _whenUnhover:
-    m_PersistentCalls:
-      m_Calls: []
-  _whenSelect:
-    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 630386828}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
@@ -7637,6 +7635,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  _whenHover:
+    m_PersistentCalls:
+      m_Calls: []
+  _whenUnhover:
+    m_PersistentCalls:
+      m_Calls: []
+  _whenSelect:
+    m_PersistentCalls:
+      m_Calls: []
   _whenUnselect:
     m_PersistentCalls:
       m_Calls: []
@@ -7646,6 +7653,20 @@ MonoBehaviour:
   _whenCancel:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &887596210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887596203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 194688212c426d14da332df8907a3c08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PokeInteractableToggle
+  _pokeInteractable: {fileID: 887596205}
+  _startDisabled: 0
 --- !u!1 &920271029
 GameObject:
   m_ObjectHideFlags: 0
@@ -10580,6 +10601,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1356300505}
         m_TargetAssemblyTypeName: PokeInteractableToggle, Assembly-CSharp
         m_MethodName: Disable
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1604643721}
+        m_TargetAssemblyTypeName: PokeInteractableToggle, Assembly-CSharp
+        m_MethodName: Enable
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -15692,7 +15725,6 @@ MonoBehaviour:
   bubblePrefab: {fileID: 8113090910208356346, guid: 18acf2cd75360ee49b650ce3cb6b0f2f, type: 3}
   audioSource: {fileID: 65870881}
   microphoneRecorder: {fileID: 65870880}
-  bubbleTranscriber: {fileID: 0}
   currentBubbleBeingGrabbed: {fileID: 0}
   bubbleMenuScript: {fileID: 0}
   headForOrbitCenter: {fileID: 0}
@@ -16007,6 +16039,10 @@ PrefabInstance:
     - target: {fileID: 8113090910208356346, guid: 18acf2cd75360ee49b650ce3cb6b0f2f, type: 3}
       propertyPath: m_Name
       value: Thought Bubble Interactable
+      objectReference: {fileID: 0}
+    - target: {fileID: 8113090910208356346, guid: 18acf2cd75360ee49b650ce3cb6b0f2f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8869797667664766494, guid: 18acf2cd75360ee49b650ce3cb6b0f2f, type: 3}
       propertyPath: m_IsTrigger

@@ -51,19 +51,25 @@ public class BubbleMenu : MonoBehaviour
     {
         if (isAudioPlaying)
         {
-            isAudioPlaying = scenePropReference.audioSource.isPlaying;
-            
+            AudioSource source = scenePropReference.audioSource;
+            isAudioPlaying = source.isPlaying;
+
+            // The clip can be cleared (e.g. the bubble was released) before this flag
+            // flips to false — bail out this frame rather than deref a null clip.
+            if (source.clip == null)
+                return;
+
             elapsedTime += Time.deltaTime;
             int minutes = Mathf.FloorToInt(elapsedTime / 60f);
             int seconds = Mathf.FloorToInt(elapsedTime % 60f);
             timeCounterText.text = string.Format("{0}:{1:00}", minutes, seconds);
 
-            float clipLength = scenePropReference.audioSource.clip.length;
+            float clipLength = source.clip.length;
             int clipMinutes = Mathf.FloorToInt(clipLength / 60f);
             int clipSeconds = Mathf.FloorToInt(clipLength % 60f);
             audioLengthText.text = string.Format("{0}:{1:00}", clipMinutes, clipSeconds);
-            
-            if(!isAudioFinishedPlaying && !isAudioPlaying && WithinThreshold(elapsedTime, scenePropReference.audioSource.clip.length, 0.5f))
+
+            if(!isAudioFinishedPlaying && !isAudioPlaying && WithinThreshold(elapsedTime, clipLength, 0.5f))
             {
                 isAudioFinishedPlaying = true;
                 onAudioFinishedPlaying?.Invoke();

@@ -6,7 +6,7 @@ public class WristControlBehavior : MonoBehaviour
     public ScenePropReference scenePropReference;
     public PointableUnityEventWrapper buttonEventWrapper;
     public bool isMainMenuVisible = false;
-    public GameObject mainMenu;
+    public GameObject mainMenu, bubbleCreationMenu;
 
     void Awake()
     {

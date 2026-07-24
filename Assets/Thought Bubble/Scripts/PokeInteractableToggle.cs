@@ -34,16 +34,28 @@ public class PokeInteractableToggle : MonoBehaviour
             Debug.LogError($"{nameof(PokeInteractableToggle)}: no PokeInteractable found on '{name}' or its children.", this);
     }
 
-    private IEnumerator Start()
+    // Re-apply the start-disabled state every time this button becomes active — e.g.
+    // each time its menu is shown via SetActive(true). Using OnEnable instead of a
+    // one-shot Start() does two things:
+    //   1. Resets the button to disabled on every menu open, so a prior session's
+    //      Enable() calls don't leak into the next open.
+    //   2. Survives the scene warm-up race. PreInitializeHidden also waits one frame
+    //      then hides its menu; if it wins that race and deactivates us before the
+    //      deferred SetEnabled(false) runs, the coroutine is killed. Because this is
+    //      in OnEnable, it simply runs again on the next real activation.
+    private void OnEnable()
     {
         if (_startDisabled)
-        {
-            // Wait one frame so the PokeInteractable completes its own Start()
-            // registration first. Disabling it before it registers can leave it
-            // "dead" instead of cleanly disabled.
-            yield return null;
-            SetEnabled(false);
-        }
+            StartCoroutine(ApplyStartDisabled());
+    }
+
+    private IEnumerator ApplyStartDisabled()
+    {
+        // Wait one frame so the PokeInteractable completes its own enable/registration
+        // handshake first. Disabling it in the same frame it activates can leave it
+        // "dead" instead of cleanly disabled.
+        yield return null;
+        SetEnabled(false);
     }
 
     /// <summary>Enable (ungrey, pokeable) or disable (grey, not pokeable) the button.</summary>
