@@ -42,6 +42,7 @@ public class BubbleGrabBehavior : MonoBehaviour
             Debug.LogWarning("A bubble is already being grabbed. Ignore this grab");
         }
         DisableOtherBubbles(false);
+        scenePropReference.isBubbleMenuOpen = true;
     }
 
     // Called when the bubble is released. Add any further release-time logic here.
@@ -66,6 +67,7 @@ public class BubbleGrabBehavior : MonoBehaviour
             orbit.OnReleased();
         }
         DisableOtherBubbles(true);
+        scenePropReference.isBubbleMenuOpen = false;
     }
 
 
@@ -78,6 +80,7 @@ public class BubbleGrabBehavior : MonoBehaviour
         if (scenePropReference != null && scenePropReference.bubbleMenu != null)
         {
             scenePropReference.bubbleMenu.SetActive(true);
+            
         }
         else
         {

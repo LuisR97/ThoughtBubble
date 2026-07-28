@@ -15726,7 +15726,9 @@ MonoBehaviour:
   audioSource: {fileID: 65870881}
   microphoneRecorder: {fileID: 65870880}
   currentBubbleBeingGrabbed: {fileID: 0}
-  bubbleMenuScript: {fileID: 0}
+  bubbleInstantiator: {fileID: 1604643722}
+  bubbleMenuScript: {fileID: 108775171}
+  isBubbleMenuOpen: 0
   headForOrbitCenter: {fileID: 0}
   orbitCenter: {x: 0, y: 0, z: 0}
 --- !u!114 &2130224844

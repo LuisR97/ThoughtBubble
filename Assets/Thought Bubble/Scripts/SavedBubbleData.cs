@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using Oculus.Interaction;
+using Oculus.Interaction.HandGrab;
 using UnityEngine;
 
 public class SavedBubbleData : MonoBehaviour
@@ -90,5 +92,23 @@ public class SavedBubbleData : MonoBehaviour
     private void OnApplicationQuit()
     {
         SaveToFile();
+    }
+
+    public void DisableAllBubbleGrabBehavior(bool isEnabled)
+    {
+        foreach (Bubble bubble in bubbles)
+        {
+            if (bubble != null)
+            {
+                BubbleGrabBehavior grabBehavior = bubble.GetComponent<BubbleGrabBehavior>();
+                if (grabBehavior != null)
+                {
+                    grabBehavior.handGrabObject.GetComponent<HandGrabInteractable>().enabled = isEnabled;
+                    grabBehavior.handGrabObject.GetComponent<GrabInteractable>().enabled = isEnabled;
+                    grabBehavior.distanceGrabObject.GetComponent<DistanceHandGrabInteractable>().enabled = isEnabled;
+                    grabBehavior.distanceGrabObject.GetComponent<DistanceGrabInteractable>().enabled = isEnabled;
+                }
+            }
+        }
     }
 }

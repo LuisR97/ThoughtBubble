@@ -19,18 +19,24 @@ public class WristControlBehavior : MonoBehaviour
         scenePropReference = ScenePropReference.Instance;
         mainMenu = scenePropReference.mainMenu;
     }
-
     public void WristButtonPress(PointerEvent evt)
     {
+        if(scenePropReference.isBubbleMenuOpen)
+        {
+            return;
+        }
+
         if (!isMainMenuVisible)
         {
             ShowMainMenu();
+            scenePropReference.savedBubbles.DisableAllBubbleGrabBehavior(false);
             Debug.Log("Main menu shown.");
             isMainMenuVisible = true;
         }
         else
         {
             HideMainMenu();
+            scenePropReference.savedBubbles.DisableAllBubbleGrabBehavior(true);
             Debug.Log("Main menu hidden.");
             isMainMenuVisible = false;
         }
