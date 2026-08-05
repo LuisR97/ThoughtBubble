@@ -55,6 +55,8 @@ public class BubbleInstantiator : MonoBehaviour
 
         GameObject bubbleObject = Instantiate(_bubblePrefab, origin.position, origin.rotation);
         Bubble bubble = bubbleObject.GetComponent<Bubble>();
+        // Finalize any in-progress recording and close the mic before saving it.
+        if (microphoneRecorder != null) microphoneRecorder.CoolMic();
         bubble.BubbleData.audioFilePath = microphoneRecorder.SaveLastRecordingToFile();
         // Track the live bubble so it's included in saves. It keeps the prefab's
         // default color; its state is snapshotted from the live components at save time.
@@ -73,6 +75,21 @@ public class BubbleInstantiator : MonoBehaviour
         Transform origin = _spawnPoint != null ? _spawnPoint : transform;
         GameObject bubbleObject = Instantiate(dummyBubblePrefab, origin.position, origin.rotation);
         currentDummyBubble = bubbleObject;
+
+        if (microphoneRecorder != null)
+        {
+            // Fresh create flow: drop any leftover recording so confirming without
+            // recording produces no audio, not the previous bubble's.
+            microphoneRecorder.DiscardLastRecording();
+
+            // Desktop/Link has a ~1s WASAPI device-open freeze, so warm the mic now
+            // (at Create Bubble) to hide it. Quest opens the mic in ~27ms with no
+            // freeze, so there it just starts the device at record-press instead —
+            // keeping the mic closed until the user actually records.
+#if !UNITY_ANDROID
+            microphoneRecorder.WarmMic();
+#endif
+        }
     }
 
     public void DestroyDummyBubble()
@@ -82,5 +99,8 @@ public class BubbleInstantiator : MonoBehaviour
             Destroy(currentDummyBubble);
             currentDummyBubble = null;
         }
+
+        // Cancelled the create flow — close the mic (any recording is discarded).
+        if (microphoneRecorder != null) microphoneRecorder.CoolMic();
     }
 }

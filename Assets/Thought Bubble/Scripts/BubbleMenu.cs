@@ -10,8 +10,7 @@ public class BubbleMenu : MonoBehaviour
     private PokeInteractableToggle playAudioButtonToggle, pauseAudioButtonToggle, rewindAudioButtonToggle;
     //TODO add reference to the delete button and text scroll with audio transcription
     public TMP_Text audioLengthText, timeCounterText;
-    private bool isAudioPlaying; 
-    private float elapsedTime;
+    private bool isAudioPlaying;
     private bool isAudioFinishedPlaying = false;
     public UnityEvent onAudioFinishedPlaying;
 
@@ -35,7 +34,8 @@ public class BubbleMenu : MonoBehaviour
         playAudioButtonToggle.Enable();
         pauseAudioButtonToggle.Disable();
         rewindAudioButtonToggle.Disable();
-        elapsedTime = 0f;
+        isAudioPlaying = false;
+        isAudioFinishedPlaying = false;
         timeCounterText.text = "0:00";
         audioLengthText.text = "0:00";
     }
@@ -49,32 +49,30 @@ public class BubbleMenu : MonoBehaviour
 
     void Update()
     {
-        if (isAudioPlaying)
+        AudioSource source = scenePropReference.audioSource;
+
+        // Nothing loaded yet — a streamed recording may still be loading from disk,
+        // or the bubble was released (which clears the clip). Wait for it.
+        if (source == null || source.clip == null)
+            return;
+
+        // Length is known as soon as the clip is loaded, whether or not it's playing yet.
+        audioLengthText.text = FormatTime(source.clip.length);
+
+        if (source.isPlaying)
         {
-            AudioSource source = scenePropReference.audioSource;
-            isAudioPlaying = source.isPlaying;
-
-            // The clip can be cleared (e.g. the bubble was released) before this flag
-            // flips to false — bail out this frame rather than deref a null clip.
-            if (source.clip == null)
-                return;
-
-            elapsedTime += Time.deltaTime;
-            int minutes = Mathf.FloorToInt(elapsedTime / 60f);
-            int seconds = Mathf.FloorToInt(elapsedTime % 60f);
-            timeCounterText.text = string.Format("{0}:{1:00}", minutes, seconds);
-
-            float clipLength = source.clip.length;
-            int clipMinutes = Mathf.FloorToInt(clipLength / 60f);
-            int clipSeconds = Mathf.FloorToInt(clipLength % 60f);
-            audioLengthText.text = string.Format("{0}:{1:00}", clipMinutes, clipSeconds);
-
-            if(!isAudioFinishedPlaying && !isAudioPlaying && WithinThreshold(elapsedTime, clipLength, 0.5f))
-            {
-                isAudioFinishedPlaying = true;
-                onAudioFinishedPlaying?.Invoke();
-                elapsedTime = 0f;
-            }
+            isAudioPlaying = true;
+            isAudioFinishedPlaying = false;
+            timeCounterText.text = FormatTime(source.time);
+        }
+        else if (isAudioPlaying && !isAudioFinishedPlaying)
+        {
+            // Was playing and has now stopped on its own → finished. (A user pause goes
+            // through PauseAudio, which clears isAudioPlaying, so we don't land here for pauses.)
+            isAudioPlaying = false;
+            isAudioFinishedPlaying = true;
+            timeCounterText.text = FormatTime(source.clip.length);
+            onAudioFinishedPlaying?.Invoke();
         }
     }
 
@@ -130,16 +128,17 @@ public class BubbleMenu : MonoBehaviour
     public void RewindAudio(PointerEvent evt)
     {
         scenePropReference.audioSource.time = 0f;
-        elapsedTime = 0f;
         timeCounterText.text = "0:00";
         PauseAudio(evt);
         isAudioPlaying = false;
         isAudioFinishedPlaying = false;
     }
 
-    private bool WithinThreshold(float a, float b, float threshold)
+    private string FormatTime(float seconds)
     {
-        return Mathf.Abs(a - b) < threshold;
+        int minutes = Mathf.FloorToInt(seconds / 60f);
+        int secs = Mathf.FloorToInt(seconds % 60f);
+        return string.Format("{0}:{1:00}", minutes, secs);
     }
 
     //TODO add a method for resetting all the buttons
