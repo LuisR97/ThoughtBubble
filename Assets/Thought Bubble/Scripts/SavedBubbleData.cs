@@ -11,7 +11,8 @@ public class SavedBubbleData : MonoBehaviour
     public List<Bubble> bubbles = new List<Bubble>();
 
     // persistentDataPath is the one writable, persistent location on both PC and Quest.
-    private string SavePath => Path.Combine(Application.persistentDataPath, "bubbles.json");
+    // Public so BubbleDeleter can remove the file outright once the last bubble is gone.
+    public string SavePath => Path.Combine(Application.persistentDataPath, "bubbles.json");
 
     void Start()
     {

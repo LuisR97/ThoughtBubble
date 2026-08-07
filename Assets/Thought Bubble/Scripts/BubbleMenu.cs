@@ -8,7 +8,8 @@ public class BubbleMenu : MonoBehaviour
     private ScenePropReference scenePropReference; //TODO make sure this reference still works after being made private
     public PointableUnityEventWrapper playAudioButton, pauseAudioButton, rewindAudioButton;
     private PokeInteractableToggle playAudioButtonToggle, pauseAudioButtonToggle, rewindAudioButtonToggle;
-    //TODO add reference to the delete button and text scroll with audio transcription
+    //The delete button is owned by BubbleDeleter (also on this menu object).
+    //TODO add text scroll with audio transcription
     public TMP_Text audioLengthText, timeCounterText;
     private bool isAudioPlaying;
     private bool isAudioFinishedPlaying = false;
