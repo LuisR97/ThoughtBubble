@@ -23,11 +23,36 @@ namespace ThoughtBubble
                  "child's hide is skipped because its parent deactivated first.")]
         [SerializeField] private GameObject[] alsoHideAfterWarmup;
 
+        [Tooltip("Frames to wait before hiding. Covers frame-based work: Start() running " +
+                 "and the SDK completing its registration handshake. One is sufficient for " +
+                 "that; no amount of seconds can substitute, because Start() is dispatched " +
+                 "per frame, not per second.")]
+        public int nullFrames = 1;
+
+        [Tooltip("Extra seconds to wait after the frame count. Covers time-based work — " +
+                 "chiefly InteractableColorVisual's colour fade, which accumulates " +
+                 "Time.deltaTime until it reaches ColorTime. Frames are a bad proxy for " +
+                 "this: at an uncapped editor framerate a dozen frames can elapse in 20ms " +
+                 "and cut the fade short, leaving buttons stuck at a partial colour. " +
+                 "Set to the longest ColorTime in use, plus a frame, plus margin.")]
+        public float warmupSeconds = 0f;
+
         private IEnumerator Start()
         {
-            // Wait one frame so every child component's Start() (and the SDK's
+            // Wait number of frames so every child component's Start() (and the SDK's
             // deferred enable/disable registration handshake) has completed.
-            yield return null;
+            for (int i = 0; i < nullFrames; i++)
+            {
+                yield return null;
+            }
+
+            // Then wait out any time-based work that the frame count cannot guarantee.
+            // WaitForSeconds (scaled, not Realtime) deliberately matches the Time.deltaTime
+            // the colour fade itself uses, so the two stay in step if timeScale changes.
+            if (warmupSeconds > 0f)
+            {
+                yield return new WaitForSeconds(warmupSeconds);
+            }
 
             // Hide nested screens first, while this object is still active, so
             // their SetActive(false) is guaranteed to run.
