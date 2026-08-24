@@ -1,0 +1,46 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(**/*.meta)",
+      "Write(**/*.meta)",
+
+      "Edit(Assets/**/*.unity)",
+      "Write(Assets/**/*.unity)",
+      "Edit(Assets/**/*.prefab)",
+      "Write(Assets/**/*.prefab)",
+      "Edit(Assets/**/*.asset)",
+      "Write(Assets/**/*.asset)",
+
+      "Edit(Library/**)",
+      "Write(Library/**)",
+      "Edit(Assets/Oculus/**)",
+      "Write(Assets/Oculus/**)",
+      "Edit(Assets/InteractionSDK/**)",
+      "Write(Assets/InteractionSDK/**)",
+      "Edit(Assets/XRI/**)",
+      "Write(Assets/XRI/**)",
+      "Edit(Assets/_Recovery/**)",
+      "Write(Assets/_Recovery/**)"
+    ],
+
+    "ask": [
+      "Edit(ProjectSettings/**)",
+      "Write(ProjectSettings/**)",
+      "Edit(Packages/**)",
+      "Write(Packages/**)"
+    ],
+
+    "allow": [
+      "Edit(Assets/Thought Bubble/**)",
+      "Write(Assets/Thought Bubble/**)",
+      "Edit(Docs/**)",
+      "Write(Docs/**)",
+      "Edit(CLAUDE.md)",
+      "Write(CLAUDE.md)",
+
+      "Read(//c/Program Files/Unity/Hub/Editor/**)",
+      "Read(//c/Users/rayga/AppData/LocalLow/CuervoWorks/ThoughtBubble/**)",
+      "Read(//c/Users/rayga/AppData/Local/Unity/Editor/**)"
+    ]
+  }
+}
