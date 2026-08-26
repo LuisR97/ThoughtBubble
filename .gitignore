@@ -107,3 +107,8 @@ InitTestScene*.unity*
 
 # Unity crash/auto-recovery scene backups
 /[Aa]ssets/_[Rr]ecovery/
+
+# Whisper speech-recognition model weights (~31 MB binary).
+# Deliberately not committed — see README.md "First-time setup" for how to fetch it.
+/[Aa]ssets/[Ss]treamingAssets/Whisper/*.bin
+/[Aa]ssets/[Ss]treamingAssets/Whisper/*.bin.meta

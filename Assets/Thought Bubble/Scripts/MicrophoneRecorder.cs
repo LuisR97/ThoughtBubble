@@ -28,7 +28,7 @@ public class MicrophoneRecorder : MonoBehaviour
     [Tooltip("Size of the in-memory capture ring buffer in seconds. Small on purpose: audio is drained to disk continuously, so this only needs to cover a few frames of latency.")]
     [SerializeField] private int _bufferSeconds = 10;
     [Tooltip("Preferred sample rate (Hz). Clamped to what the device supports.")]
-    [SerializeField] private int _sampleRate = 44100;
+    [SerializeField] private int _sampleRate = 16000;
     [Tooltip("Optional: play the recording back through this AudioSource when you stop.")]
     [SerializeField] private AudioSource _playbackSource;
     [SerializeField] private bool _playOnStop = false;

@@ -12,7 +12,8 @@ public class BubbleInstantiator : MonoBehaviour
     private PointableUnityEventWrapper buttonEventWrapper;
     private SavedBubbleData bubbleData;
     private MicrophoneRecorder microphoneRecorder;
-    
+    private BubbleTranscriber bubbleTranscriber;
+
     void Awake()
     {
         buttonEventWrapper = GetComponent<PointableUnityEventWrapper>();
@@ -28,6 +29,7 @@ public class BubbleInstantiator : MonoBehaviour
     {
         bubbleData = ScenePropReference.Instance.savedBubbles;
         microphoneRecorder = ScenePropReference.Instance.microphoneRecorder;
+        bubbleTranscriber = ScenePropReference.Instance.bubbleTranscriber;
     }
 
     //Gets called from CONFIRM BUBBLE button in the Create Bubble menu 
@@ -58,6 +60,13 @@ public class BubbleInstantiator : MonoBehaviour
         // Finalize any in-progress recording and close the mic before saving it.
         if (microphoneRecorder != null) microphoneRecorder.CoolMic();
         bubble.BubbleData.audioFilePath = microphoneRecorder.SaveLastRecordingToFile();
+        // Kick off transcription. This returns immediately — the text lands on the bubble
+        // seconds later, so bubble creation never waits on the model. The Bubble Menu reads
+        // the result when the user grabs the bubble, by which point it has usually finished.
+        if (bubbleTranscriber != null)
+            bubbleTranscriber.Enqueue(bubble);
+        else
+            Debug.LogWarning($"{nameof(BubbleInstantiator)}: no BubbleTranscriber on ScenePropReference; bubble will have no transcription.", this);
         // Track the live bubble so it's included in saves. It keeps the prefab's
         // default color; its state is snapshotted from the live components at save time.
         bubbleData.Register(bubble);

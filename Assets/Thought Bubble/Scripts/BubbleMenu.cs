@@ -11,6 +11,9 @@ public class BubbleMenu : MonoBehaviour
     //The delete button is owned by BubbleDeleter (also on this menu object).
     //TODO add text scroll with audio transcription
     public TMP_Text audioLengthText, timeCounterText;
+    [Tooltip("Optional for now: shows the grabbed bubble's transcription. Safe to leave " +
+             "unassigned — the transcription still gets written to the bubble either way.")]
+    public TMP_Text transcriptionText;
     private bool isAudioPlaying;
     private bool isAudioFinishedPlaying = false;
     public UnityEvent onAudioFinishedPlaying;
@@ -39,6 +42,43 @@ public class BubbleMenu : MonoBehaviour
         isAudioFinishedPlaying = false;
         timeCounterText.text = "0:00";
         audioLengthText.text = "0:00";
+
+        // Read Instance directly rather than the cached field: OnEnable runs before Start,
+        // so on the menu's first (pre-hidden) activation the cached reference is still null.
+        if (scenePropReference == null)
+            scenePropReference = ScenePropReference.Instance;
+
+        ShowTranscription();
+
+        // Transcription may still be running when the menu opens — a bubble grabbed
+        // immediately after being made will not have its text yet. Listen so it fills in
+        // the moment the model finishes instead of leaving the placeholder on screen.
+        if (scenePropReference != null && scenePropReference.bubbleTranscriber != null)
+            scenePropReference.bubbleTranscriber.onTranscriptionComplete += OnTranscriptionComplete;
+    }
+
+    void OnDisable()
+    {
+        if (scenePropReference != null && scenePropReference.bubbleTranscriber != null)
+            scenePropReference.bubbleTranscriber.onTranscriptionComplete -= OnTranscriptionComplete;
+    }
+
+    /// <summary>Fills the transcription label from whichever bubble is currently grabbed.</summary>
+    private void ShowTranscription()
+    {
+        if (transcriptionText == null) return;   // label not built in the scene yet
+
+        Bubble bubble = scenePropReference != null ? scenePropReference.currentBubbleBeingGrabbed : null;
+        string text = bubble != null ? bubble.BubbleData.transcription : null;
+        transcriptionText.text = string.IsNullOrEmpty(text) ? "" : text;
+    }
+
+    /// <summary>Only refresh if the finished bubble is the one the menu is showing.</summary>
+    private void OnTranscriptionComplete(Bubble bubble, string text)
+    {
+        if (scenePropReference == null || bubble != scenePropReference.currentBubbleBeingGrabbed)
+            return;
+        ShowTranscription();
     }
 
     void OnDestroy()

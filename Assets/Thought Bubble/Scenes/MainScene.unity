@@ -758,7 +758,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4377745423753362038, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 4293783037
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 4866862327174177081, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: _startDisabled
@@ -1511,7 +1511,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4377745423753362038, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 4293783037
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 4866862327174177081, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: _startDisabled
@@ -1573,6 +1573,8 @@ GameObject:
   - component: {fileID: 65870882}
   - component: {fileID: 65870881}
   - component: {fileID: 65870880}
+  - component: {fileID: 65870884}
+  - component: {fileID: 65870883}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -1594,7 +1596,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MicrophoneRecorder
   _device: 
   _bufferSeconds: 10
-  _sampleRate: 44100
+  _sampleRate: 16000
   _playbackSource: {fileID: 65870881}
   _playOnStop: 0
 --- !u!82 &65870881
@@ -1709,6 +1711,54 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &65870883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 65870879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49acd94a73ee65d499dc9d11d35c3475, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleTranscriber
+  _whisper: {fileID: 65870884}
+  _recorder: {fileID: 65870880}
+  _pendingLabel: "transcribing\u2026"
+--- !u!114 &65870884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 65870879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9370225a2ca94276b870d5f87b0db55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: com.whisper.unity::Whisper.WhisperManager
+  logLevel: 1
+  modelPath: Whisper/ggml-tiny.en-q5_1.bin
+  isModelPathInStreamingAssets: 1
+  initOnAwake: 1
+  useGpu: 0
+  flashAttention: 0
+  language: en
+  translateToEnglish: 0
+  strategy: 0
+  noContext: 1
+  singleSegment: 0
+  enableTokens: 0
+  initialPrompt: 
+  stepSec: 3
+  keepSec: 0.2
+  lengthSec: 10
+  updatePrompt: 1
+  dropOldBuffer: 0
+  useVad: 1
+  tokensTimestamps: 0
+  audioCtx: 0
 --- !u!1 &78581737
 GameObject:
   m_ObjectHideFlags: 0
@@ -1872,6 +1922,7 @@ MonoBehaviour:
   rewindAudioButton: {fileID: 563821086}
   audioLengthText: {fileID: 1693566172}
   timeCounterText: {fileID: 722764186}
+  transcriptionText: {fileID: 0}
   onAudioFinishedPlaying:
     m_PersistentCalls:
       m_Calls:
@@ -4140,7 +4191,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4377745423753362038, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 4293783037
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 4866862327174177081, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: _startDisabled
@@ -4295,7 +4346,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4377745423753362038, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 4294177779
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 5707048604588584917, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5253,7 +5304,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4377745423753362038, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 4293783037
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 4866862327174177081, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: _startDisabled
@@ -5781,7 +5832,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4377745423753362038, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 4293783037
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 5707048604588584917, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6617,7 +6668,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4377745423753362038, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 4293783037
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 4377745423753362038, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: m_VerticalAlignment
@@ -7031,7 +7082,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4377745423753362038, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 4293783037
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 4866862327174177081, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: _startDisabled
@@ -8055,7 +8106,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4377745423753362038, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 4294177779
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 4866862327174177081, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: _startDisabled
@@ -8252,7 +8303,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4377745423753362038, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 4294177779
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 5707048604588584917, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8527,9 +8578,10 @@ MonoBehaviour:
   bubblePrefab: {fileID: 8113090910208356346, guid: 18acf2cd75360ee49b650ce3cb6b0f2f, type: 3}
   audioSource: {fileID: 65870881}
   microphoneRecorder: {fileID: 65870880}
-  currentBubbleBeingGrabbed: {fileID: 0}
   bubbleInstantiator: {fileID: 1604643722}
   bubbleMenuScript: {fileID: 108775171}
+  bubbleTranscriber: {fileID: 65870883}
+  currentBubbleBeingGrabbed: {fileID: 0}
   isBubbleMenuOpen: 0
   headForOrbitCenter: {fileID: 0}
   orbitCenter: {x: 0, y: 0, z: 0}

@@ -1,38 +1,38 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
+using Whisper;
 
 /// <summary>
-/// Turns a bubble's saved recording into text, fully on-device, and writes the
-/// result into <see cref="Bubble.Data.transcription"/> so it persists to bubbles.json.
+/// Turns a bubble's saved recording into text, fully on-device, and writes the result
+/// into <see cref="Bubble.Data.transcription"/> so it persists to bubbles.json.
 ///
-/// This is the PIPELINE only. The actual speech model is not implemented yet — it
-/// sits behind <see cref="ITranscriptionBackend"/> so the plumbing (queueing,
-/// frame-spreading, state, persistence) can be built and tested before Unity
-/// Inference Engine and the Whisper ONNX model are added to the project.
+/// Speech recognition is Whisper, running through whisper.unity (a Unity wrapper around
+/// the native whisper.cpp library). Audio never leaves the headset or the PC.
 ///
-/// Today it runs with <see cref="StubTranscriptionBackend"/>, which returns
-/// placeholder text. Swapping in the real model means writing one new class and
-/// assigning it in <see cref="ResolveBackend"/> — nothing else here changes.
+/// Transcription reads a FINISHED WAV off disk, never the live microphone, so it never
+/// contends with <see cref="MicrophoneRecorder"/> for the device.
 ///
-/// Transcription reads a FINISHED WAV off disk, never the live microphone, so it
-/// never contends with MicrophoneRecorder for the device.
+/// Inference runs on a background thread inside whisper.unity, so it does not stall
+/// rendering — but it is slow (10s+ on Quest for a short clip), which is why the bubble
+/// gets <see cref="_pendingLabel"/> immediately and the real text arrives later.
+/// Bubbles are transcribed one at a time; whisper.cpp serialises calls internally anyway,
+/// and two inferences fighting over the Quest CPU helps nobody.
 /// </summary>
 public class BubbleTranscriber : MonoBehaviour
 {
     public enum State { Idle, Transcribing }
 
+    [Tooltip("The Whisper model host. Loads the weights on Awake and owns the native context.")]
+    [SerializeField] private WhisperManager _whisper;
+
     [Tooltip("Optional. Only used to resolve the last recording when transcribing " +
              "a bubble whose audioFilePath has not been set yet.")]
     [SerializeField] private MicrophoneRecorder _recorder;
 
-    [Tooltip("Frames to yield between model steps. Inference must never run in one " +
-             "blocking call — a multi-second freeze in VR is nauseating.")]
-    [SerializeField] private int _framesBetweenSteps = 1;
-
-    [Tooltip("Placeholder text shown while a bubble is still being transcribed.")]
+    [Tooltip("Placeholder text held in the bubble while it is still being transcribed.")]
     [SerializeField] private string _pendingLabel = "transcribing…";
 
     /// <summary>Text of the most recently completed transcription, or null.</summary>
@@ -48,27 +48,19 @@ public class BubbleTranscriber : MonoBehaviour
     public event Action<Bubble, string> onTranscriptionFailed;
 
     private readonly Queue<Bubble> _pending = new Queue<Bubble>();
-    private ITranscriptionBackend _backend;
-    private Coroutine _worker;
+    private bool _isProcessing;
+    private bool _destroyed;
 
-    private void Awake()
+    private void OnDestroy()
     {
-        _backend = ResolveBackend();
+        // Unlike a coroutine, an in-flight Task keeps running after this object dies.
+        // The flag stops the continuation from touching destroyed Unity objects.
+        _destroyed = true;
     }
 
     /// <summary>
-    /// Picks the speech backend. Once Unity Inference Engine and Whisper tiny are
-    /// in the project, return the real implementation from here instead.
-    /// </summary>
-    private ITranscriptionBackend ResolveBackend()
-    {
-        // TODO(whisper): return new WhisperTranscriptionBackend(modelAsset);
-        return new StubTranscriptionBackend();
-    }
-
-    /// <summary>
-    /// Queue a bubble for transcription. Safe to call repeatedly; bubbles are
-    /// processed one at a time so two models never run concurrently on the Quest.
+    /// Queue a bubble for transcription. Safe to call repeatedly; returns immediately.
+    /// The bubble shows <see cref="_pendingLabel"/> until the model finishes.
     /// </summary>
     public void Enqueue(Bubble bubble)
     {
@@ -83,11 +75,17 @@ public class BubbleTranscriber : MonoBehaviour
             return;
         }
 
+        if (_whisper == null)
+        {
+            Debug.LogError($"{nameof(BubbleTranscriber)}: no WhisperManager assigned.", this);
+            return;
+        }
+
         bubble.BubbleData.transcription = _pendingLabel;
         _pending.Enqueue(bubble);
 
-        if (_worker == null)
-            _worker = StartCoroutine(ProcessQueue());
+        if (!_isProcessing)
+            _ = ProcessQueue();
     }
 
     /// <summary>
@@ -96,60 +94,79 @@ public class BubbleTranscriber : MonoBehaviour
     /// </summary>
     public void ApplyTo(Bubble bubble) => Enqueue(bubble);
 
-    private IEnumerator ProcessQueue()
+    private async Task ProcessQueue()
     {
+        _isProcessing = true;
+
         while (_pending.Count > 0)
         {
             Bubble bubble = _pending.Dequeue();
             if (bubble == null) continue;   // deleted while queued
 
-            yield return TranscribeOne(bubble);
+            await TranscribeOne(bubble);
+            if (_destroyed) return;
         }
 
         CurrentState = State.Idle;
         CurrentBubble = null;
-        _worker = null;
+        _isProcessing = false;
     }
 
-    private IEnumerator TranscribeOne(Bubble bubble)
+    private async Task TranscribeOne(Bubble bubble)
     {
-        string relative = bubble.BubbleData.audioFilePath;
-        string absolute = Path.Combine(Application.persistentDataPath, relative);
+        string absolute = Path.Combine(Application.persistentDataPath, bubble.BubbleData.audioFilePath);
 
         if (!File.Exists(absolute))
         {
             Fail(bubble, $"recording not found at {absolute}");
-            yield break;
+            return;
+        }
+
+        // Read off the main thread: a long recording is megabytes, and decoding it to
+        // floats in one frame would show up as a hitch in the headset.
+        var wav = await Task.Run(() => ReadWav(absolute));
+        if (_destroyed) return;
+
+        if (!wav.ok)
+        {
+            Fail(bubble, $"could not read {Path.GetFileName(absolute)}: {wav.error}");
+            return;
         }
 
         CurrentState = State.Transcribing;
         CurrentBubble = bubble;
         onTranscriptionStarted?.Invoke(bubble);
 
-        string result = null;
-        string error = null;
+        // whisper.unity downmixes to mono and resamples to 16 kHz for us, so whatever the
+        // mic actually gave us will work — but see MicrophoneRecorder, which now asks for
+        // 16 kHz up front so that conversion is a no-op.
+        WhisperResult result = await _whisper.GetTextAsync(wav.samples, wav.frequency, wav.channels);
 
-        // The backend yields between steps so the decode loop is spread across
-        // frames instead of blocking. Whisper tiny on a Quest 3 is expected to run
-        // slower than real time, so this may take longer than the clip itself.
-        yield return _backend.Transcribe(
-            absolute,
-            _framesBetweenSteps,
-            text => result = text,
-            message => error = message);
+        // The transcriber or the bubble may have been destroyed while the model ran.
+        if (_destroyed) return;
+        if (bubble == null) return;
 
-        if (error != null)
+        if (result == null)
         {
-            Fail(bubble, error);
-            yield break;
+            Fail(bubble, "Whisper returned no result — check that the model weights loaded.");
+            return;
         }
 
-        // The bubble may have been deleted while the model was running.
-        if (bubble == null) yield break;
+        // Whisper pads its output with leading spaces and emits markers like [BLANK_AUDIO]
+        // for silence; neither belongs in a saved thought.
+        string text = result.Result?.Trim();
+        if (string.IsNullOrEmpty(text) || text == "[BLANK_AUDIO]")
+        {
+            Fail(bubble, "no speech detected in recording");
+            return;
+        }
 
-        bubble.BubbleData.transcription = result;
-        LastTranscription = result;
-        onTranscriptionComplete?.Invoke(bubble, result);
+        bubble.BubbleData.transcription = text;
+        LastTranscription = text;
+        // Logged so the result is verifiable before any UI exists to show it —
+        // on the headset, read it with: adb logcat -s Unity
+        Debug.Log($"{nameof(BubbleTranscriber)}: transcribed \"{text}\"", bubble);
+        onTranscriptionComplete?.Invoke(bubble, text);
     }
 
     private void Fail(Bubble bubble, string message)
@@ -159,44 +176,69 @@ public class BubbleTranscriber : MonoBehaviour
             bubble.BubbleData.transcription = null;
         onTranscriptionFailed?.Invoke(bubble, message);
     }
-}
 
-/// <summary>
-/// A speech-to-text implementation. Kept as an interface so the pipeline above can
-/// be finished and tested before the real model exists.
-/// </summary>
-public interface ITranscriptionBackend
-{
     /// <summary>
-    /// Transcribe a WAV file. Must yield periodically rather than blocking —
-    /// call onDone with the text, or onError with a reason.
+    /// Reads a 16-bit PCM WAV into normalised float samples, interleaved by channel —
+    /// the layout whisper.unity expects. Walks the chunk list rather than assuming a
+    /// fixed 44-byte header, so it still works if the header ever gains a chunk.
     /// </summary>
-    IEnumerator Transcribe(string absoluteWavPath, int framesBetweenSteps,
-                           Action<string> onDone, Action<string> onError);
-}
-
-/// <summary>
-/// Placeholder backend. Returns fixed text after a short delay so the queue,
-/// state machine, events and JSON persistence can be exercised end to end
-/// without a model in the project.
-/// </summary>
-public class StubTranscriptionBackend : ITranscriptionBackend
-{
-    public IEnumerator Transcribe(string absoluteWavPath, int framesBetweenSteps,
-                                  Action<string> onDone, Action<string> onError)
+    private static (bool ok, float[] samples, int frequency, int channels, string error)
+        ReadWav(string path)
     {
-        // Stand-in for the real work: log-mel preprocessing, encoder pass, then an
-        // autoregressive decode loop. Each of those yields between steps.
-        for (int step = 0; step < 10; step++)
+        try
         {
-            for (int f = 0; f < Mathf.Max(1, framesBetweenSteps); f++)
-                yield return null;
+            byte[] bytes = File.ReadAllBytes(path);
+            if (bytes.Length < 12 ||
+                BitConverter.ToUInt32(bytes, 0) != 0x46464952 ||   // "RIFF"
+                BitConverter.ToUInt32(bytes, 8) != 0x45564157)     // "WAVE"
+                return (false, null, 0, 0, "not a RIFF/WAVE file");
+
+            int frequency = 0;
+            int channels = 0;
+            int bitsPerSample = 0;
+            int dataOffset = -1;
+            int dataLength = 0;
+
+            int pos = 12;
+            while (pos + 8 <= bytes.Length)
+            {
+                uint chunkId = BitConverter.ToUInt32(bytes, pos);
+                int chunkSize = BitConverter.ToInt32(bytes, pos + 4);
+                int body = pos + 8;
+
+                if (chunkSize < 0) break;   // malformed; stop rather than loop forever
+
+                if (chunkId == 0x20746D66 && body + 16 <= bytes.Length)      // "fmt "
+                {
+                    channels = BitConverter.ToInt16(bytes, body + 2);
+                    frequency = BitConverter.ToInt32(bytes, body + 4);
+                    bitsPerSample = BitConverter.ToInt16(bytes, body + 14);
+                }
+                else if (chunkId == 0x61746164)                              // "data"
+                {
+                    dataOffset = body;
+                    dataLength = Mathf.Min(chunkSize, bytes.Length - body);
+                }
+
+                pos = body + chunkSize + (chunkSize & 1); // chunks are word-aligned
+            }
+
+            if (dataOffset < 0 || frequency <= 0 || channels <= 0)
+                return (false, null, 0, 0, "missing fmt or data chunk");
+
+            if (bitsPerSample != 16)
+                return (false, null, 0, 0, $"expected 16-bit PCM, found {bitsPerSample}-bit");
+
+            int count = dataLength / 2;
+            var samples = new float[count];
+            for (int i = 0; i < count; i++)
+                samples[i] = BitConverter.ToInt16(bytes, dataOffset + i * 2) / 32768f;
+
+            return (true, samples, frequency, channels, null);
         }
-
-        long bytes = 0;
-        try { bytes = new FileInfo(absoluteWavPath).Length; }
-        catch (Exception e) { onError?.Invoke(e.Message); yield break; }
-
-        onDone?.Invoke($"[stub transcription of {Path.GetFileName(absoluteWavPath)}, {bytes / 1024} KB]");
+        catch (Exception e)
+        {
+            return (false, null, 0, 0, e.Message);
+        }
     }
 }
