@@ -1725,7 +1725,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BubbleTranscriber
   _whisper: {fileID: 65870884}
   _recorder: {fileID: 65870880}
-  _pendingLabel: "transcribing\u2026"
+  _chunkSeconds: 15
 --- !u!114 &65870884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1742,7 +1742,7 @@ MonoBehaviour:
   modelPath: Whisper/ggml-tiny.en-q5_1.bin
   isModelPathInStreamingAssets: 1
   initOnAwake: 1
-  useGpu: 0
+  useGpu: 1
   flashAttention: 0
   language: en
   translateToEnglish: 0
@@ -1923,6 +1923,7 @@ MonoBehaviour:
   audioLengthText: {fileID: 1693566172}
   timeCounterText: {fileID: 722764186}
   transcriptionText: {fileID: 0}
+  pendingLabel: "\u2026transcribing\u2026"
   onAudioFinishedPlaying:
     m_PersistentCalls:
       m_Calls:

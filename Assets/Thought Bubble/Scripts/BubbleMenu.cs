@@ -14,6 +14,9 @@ public class BubbleMenu : MonoBehaviour
     [Tooltip("Optional for now: shows the grabbed bubble's transcription. Safe to leave " +
              "unassigned — the transcription still gets written to the bubble either way.")]
     public TMP_Text transcriptionText;
+    [Tooltip("Appended after the text so far while a bubble is still being transcribed. " +
+             "Display only — this is never written into the saved bubble data.")]
+    public string pendingLabel = "…transcribing…";
     private bool isAudioPlaying;
     private bool isAudioFinishedPlaying = false;
     public UnityEvent onAudioFinishedPlaying;
@@ -50,31 +53,52 @@ public class BubbleMenu : MonoBehaviour
 
         ShowTranscription();
 
-        // Transcription may still be running when the menu opens — a bubble grabbed
-        // immediately after being made will not have its text yet. Listen so it fills in
-        // the moment the model finishes instead of leaving the placeholder on screen.
+        // Transcription is chunked and can span sessions, so text keeps arriving while
+        // the menu is open. Listen to both: progress for each finished chunk, complete
+        // for the last one, so the label fills in live instead of going stale.
         if (scenePropReference != null && scenePropReference.bubbleTranscriber != null)
-            scenePropReference.bubbleTranscriber.onTranscriptionComplete += OnTranscriptionComplete;
+        {
+            scenePropReference.bubbleTranscriber.onTranscriptionProgress += OnTranscriptionUpdated;
+            scenePropReference.bubbleTranscriber.onTranscriptionComplete += OnTranscriptionUpdated;
+        }
     }
 
     void OnDisable()
     {
         if (scenePropReference != null && scenePropReference.bubbleTranscriber != null)
-            scenePropReference.bubbleTranscriber.onTranscriptionComplete -= OnTranscriptionComplete;
+        {
+            scenePropReference.bubbleTranscriber.onTranscriptionProgress -= OnTranscriptionUpdated;
+            scenePropReference.bubbleTranscriber.onTranscriptionComplete -= OnTranscriptionUpdated;
+        }
     }
 
-    /// <summary>Fills the transcription label from whichever bubble is currently grabbed.</summary>
+    /// <summary>
+    /// Fills the transcription label from whichever bubble is currently grabbed. An
+    /// unfinished bubble shows the text so far followed by the pending marker, so the
+    /// user can read what exists and still see that more is coming.
+    /// </summary>
     private void ShowTranscription()
     {
         if (transcriptionText == null) return;   // label not built in the scene yet
 
         Bubble bubble = scenePropReference != null ? scenePropReference.currentBubbleBeingGrabbed : null;
-        string text = bubble != null ? bubble.BubbleData.transcription : null;
-        transcriptionText.text = string.IsNullOrEmpty(text) ? "" : text;
+        if (bubble == null)
+        {
+            transcriptionText.text = "";
+            return;
+        }
+
+        Bubble.Data data = bubble.BubbleData;
+        string text = string.IsNullOrEmpty(data.transcription) ? "" : data.transcription;
+
+        if (!data.transcriptionComplete && !string.IsNullOrEmpty(data.audioFilePath))
+            text = string.IsNullOrEmpty(text) ? pendingLabel : text + " " + pendingLabel;
+
+        transcriptionText.text = text;
     }
 
-    /// <summary>Only refresh if the finished bubble is the one the menu is showing.</summary>
-    private void OnTranscriptionComplete(Bubble bubble, string text)
+    /// <summary>Only refresh if the updated bubble is the one the menu is showing.</summary>
+    private void OnTranscriptionUpdated(Bubble bubble, string text)
     {
         if (scenePropReference == null || bubble != scenePropReference.currentBubbleBeingGrabbed)
             return;

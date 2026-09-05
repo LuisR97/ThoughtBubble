@@ -35,6 +35,31 @@ public class SavedBubbleData : MonoBehaviour
             bubbles.Add(bubble);
         }
         Debug.Log($"Spawned {bubbles.Count} bubbles.");
+        ResumeUnfinishedTranscriptions();
+    }
+
+    /// <summary>
+    /// Re-queues any bubble whose audio was not fully transcribed. Transcription is far
+    /// slower than real time, so a long recording routinely outlives a single session —
+    /// each launch continues from the last saved chunk until the file is finished.
+    /// </summary>
+    private void ResumeUnfinishedTranscriptions()
+    {
+        BubbleTranscriber transcriber = ScenePropReference.Instance != null
+            ? ScenePropReference.Instance.bubbleTranscriber
+            : null;
+        if (transcriber == null) return;
+
+        int resumed = 0;
+        foreach (Bubble bubble in bubbles)
+        {
+            if (bubble == null || !bubble.BubbleData.NeedsTranscription) continue;
+            transcriber.Enqueue(bubble);
+            resumed++;
+        }
+
+        if (resumed > 0)
+            Debug.Log($"{nameof(SavedBubbleData)}: resuming transcription for {resumed} bubble(s).");
     }
 
     /// <summary>Reads the saved JSON into a list of plain data snapshots.</summary>

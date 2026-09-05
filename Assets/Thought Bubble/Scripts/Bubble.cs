@@ -16,10 +16,22 @@ public class Bubble : MonoBehaviour
         public double currentX, currentY, currentZ;
         public int r, g, b, a;            // 0–255 per channel
         public string transcription;
+
+        // Transcription is done in chunks and can span several sessions: a long
+        // recording takes longer to transcribe than the user is likely to wear the
+        // headset. These two fields are what let it resume instead of restarting.
+        // 'transcription' above holds the text finished SO FAR — never a placeholder.
+        public double transcribedSeconds;      // how much of the audio is already done
+        public bool transcriptionComplete;     // true once the whole file has been read
+
         public bool isMovingClockwise;
         public bool isOrbiting;
         public string audioFilePath;      // relative to Application.persistentDataPath
         public Data() { }                 // required for JSON deserialization
+
+        /// <summary>True when this bubble has audio that still needs transcribing.</summary>
+        [JsonIgnore] public bool NeedsTranscription =>
+            !transcriptionComplete && !string.IsNullOrEmpty(audioFilePath);
 
         // Convenience accessors for code only. [JsonIgnore] keeps Newtonsoft from
         // serializing these (a Vector3/Color getter recurses via 'normalized' and
