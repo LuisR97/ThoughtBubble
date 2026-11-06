@@ -298,6 +298,7 @@ GameObject:
   - component: {fileID: 7391807390241137369}
   - component: {fileID: 7289940615040942284}
   - component: {fileID: 7391807390241137370}
+  - component: {fileID: 2568526540912072023}
   m_Layer: 0
   m_Name: Thought Bubble Interactable
   m_TagString: Untagged
@@ -514,7 +515,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25d91fdbb7cefbd44bec5baa6776efee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThoughtBubble.BubbleColor
-  _color: {r: 1, g: 0, b: 0, a: 1}
+  _color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &7391807390241137369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -552,6 +553,8 @@ MonoBehaviour:
     b: 0
     a: 0
     transcription: 
+    transcribedSeconds: 0
+    transcriptionComplete: 0
     isMovingClockwise: 0
     isOrbiting: 0
     audioFilePath: 
@@ -578,3 +581,15 @@ MonoBehaviour:
   settleSharpness: 2
   radialGain: 1
   verticalGain: 3
+--- !u!114 &2568526540912072023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8113090910208356346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adbb0046ee3b4f3469f4d9842de5a425, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleHoldingHands
