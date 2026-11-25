@@ -1,4 +1,5 @@
 using Oculus.Interaction;
+using TMPro;
 using UnityEngine;
 
 public class ScenePropReference : MonoBehaviour
@@ -21,6 +22,9 @@ public class ScenePropReference : MonoBehaviour
     public BubbleTranscriber bubbleTranscriber;
     public Bubble currentBubbleBeingGrabbed;
     public bool isBubbleMenuOpen = false;
+
+    [Tooltip("Testing only: on-screen text used for debugging.")]
+    public TMP_Text debugOnScreenText1, debugOnScreenText2, debugOnScreenText3, debugOnScreenText4, debugOnScreenText5, debugOnScreenText6;
 
     [Tooltip("Optional: the user's head (e.g. CenterEyeAnchor). If unset, uses Camera.main.")]
     public Transform headForOrbitCenter;

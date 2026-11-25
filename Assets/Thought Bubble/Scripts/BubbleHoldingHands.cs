@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Oculus.Interaction;
 using Oculus.Interaction.HandGrab;
 using Oculus.Interaction.Input;
+using TMPro;
 using UnityEngine;
 
 /// <summary>
@@ -26,6 +27,9 @@ public class BubbleHoldingHands : MonoBehaviour
     private readonly int[] _holdCounts = new int[2];
 
     private readonly List<IInteractableView> _grabInteractables = new List<IInteractableView>();
+
+    // Testing only: the on-screen text, fetched from ScenePropReference on first use.
+    private TMP_Text _debugHandText;
 
     /// <summary>True while the given hand is holding this bubble.</summary>
     public bool IsHeldBy(Handedness hand) => _holdCounts[(int)hand] > 0;
@@ -71,6 +75,7 @@ public class BubbleHoldingHands : MonoBehaviour
 
         _holdCounts[(int)hand]++;
         Debug.Log($"{name} grabbed by {hand} hand.");
+        ShowHolding();
     }
 
     private void OnGrabberRemoved(IInteractorView grabber)
@@ -82,6 +87,25 @@ public class BubbleHoldingHands : MonoBehaviour
         // component was enabled, which was never counted.
         _holdCounts[(int)hand] = Mathf.Max(0, _holdCounts[(int)hand] - 1);
         Debug.Log($"{name} released by {hand} hand.");
+        ShowHolding();
+    }
+
+    // Bubbles are spawned at runtime, so the prefab can't be wired to the on-screen
+    // text in the Inspector. Fetch it from the scene's reference hub the first time
+    // it's needed, and only write on a grab/release so bubbles don't overwrite
+    // each other every frame.
+    private void ShowHolding()
+    {
+        if (_debugHandText == null && ScenePropReference.Instance != null)
+        {
+            _debugHandText = ScenePropReference.Instance.debugOnScreenText1;
+        }  
+        if (_debugHandText == null)
+        {
+            return;
+        }
+
+        _debugHandText.text = $"Left Hand Holding: {IsHeldBy(Handedness.Left)}\n" + $"Right Hand Holding: {IsHeldBy(Handedness.Right)}";
     }
 
     private bool TryGetHandedness(IInteractorView grabber, out Handedness hand)

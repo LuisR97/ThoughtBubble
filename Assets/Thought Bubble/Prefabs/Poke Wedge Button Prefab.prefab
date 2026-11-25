@@ -1,0 +1,179 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &5742505134805162572
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1814749642017352318, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: m_Name
+      value: Poke Wedge Button Prefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 1972972216464001807, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: instanceId
+      value: 29d56b78-3f8a-46ab-b1dc-bfa1ca2c1a74
+      objectReference: {fileID: 0}
+    - target: {fileID: 4377745423753362038, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: m_text
+      value: Wedge
+      objectReference: {fileID: 0}
+    - target: {fileID: 4377745423753362038, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 4377745423753362038, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: m_fontSizeMin
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4377745423753362038, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: m_TextWrappingMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4377745423753362038, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4755329529306535534, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: _surfacePatch
+      value: 
+      objectReference: {fileID: 7469089771007082384}
+    - target: {fileID: 5707048604588584917, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -571
+      objectReference: {fileID: 0}
+    - target: {fileID: 5707048604588584917, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 261.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5707048604588584917, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.9999485
+      objectReference: {fileID: 0}
+    - target: {fileID: 5707048604588584917, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5707048604588584917, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5707048604588584917, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5707048604588584917, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5707048604588584917, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5707048604588584917, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5707048604588584917, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402698340740163935, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163002416310012146, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: _radiusTopLeft
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163002416310012146, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: _radiusTopRight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163002416310012146, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: _radiusBottomLeft
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163002416310012146, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      propertyPath: _radiusBottomRight
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 7886229427708458082, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+    - {fileID: 6005374112988646904, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1814749642017352318, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6883765100456750605}
+    - targetCorrespondingSourceObject: {fileID: 4004038599059516499, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7469089771007082384}
+  m_SourcePrefab: {fileID: 100100000, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+--- !u!33 &1687598381740323603 stripped
+MeshFilter:
+  m_CorrespondingSourceObject: {fileID: 6402698340740163935, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+  m_PrefabInstance: {fileID: 5742505134805162572}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3918359011982807469 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8777998618847382497, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+  m_PrefabInstance: {fileID: 5742505134805162572}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8655999961534445087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cf2a74d69b1c1e41916d2a7afdff5be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &6241479809941975090 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1814749642017352318, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+  m_PrefabInstance: {fileID: 5742505134805162572}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6883765100456750605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6241479809941975090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fe95ba19cf91a345bf6b9b8b3754f1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PokeWedge
+  _innerRadius: 1
+  _outerRadius: 2
+  _startAngle: 0
+  _arcDegrees: 30
+  _gap: 0.04
+  _meshFilter: {fileID: 1687598381740323603}
+  _label: {fileID: 7086733503921920493}
+--- !u!224 &7086733503921920493 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3307994452828292001, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+  m_PrefabInstance: {fileID: 5742505134805162572}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8655999961534445087 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4004038599059516499, guid: a36091e3b020e0343a834961a6b905cb, type: 3}
+  m_PrefabInstance: {fileID: 5742505134805162572}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7469089771007082384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8655999961534445087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50cb26a6e7b5418478770658eda70dbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WedgeSurface
+  _planeSurface: {fileID: 3918359011982807469}
+  _wedge: {fileID: 6883765100456750605}
